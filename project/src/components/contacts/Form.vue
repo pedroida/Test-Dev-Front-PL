@@ -5,20 +5,20 @@
     </div>
 
     <div class="col-12 col-md-6">
-      <input-email-default v-model="content.email" />
+      <input-email-default v-model="content.email" @isValid="isValid" />
     </div>
     <div class="col-12 col-md-6">
-      <input-phone-default v-model="content.mobile" label="Celular" />
+      <input-phone-default v-model="content.mobile" label="Celular" @isValid="isValid" />
     </div>
 
     <div class="col-12 mt-5">
-      <button-default :label="buttonLabel" block />
+      <button-default :disabled="!validForm" :label="buttonLabel" block @click="submit" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, toRef } from 'vue'
+import { defineComponent, ref, Ref, watch } from 'vue'
 import { Contact } from '@/entities/Contact'
 import InputDefault from '@/components/shared/form/InputDefault.vue'
 import InputEmailDefault from '@/components/shared/form/InputEmailDefault.vue'
@@ -29,23 +29,33 @@ export default defineComponent({
   name: 'ContactForm',
   components: { ButtonDefault, InputPhoneDefault, InputEmailDefault, InputDefault },
   props: {
-    contact: {
+    modelValue: {
       type: Contact,
       required: true
     }
   },
 
-  setup (props: any) {
-    const content: Ref<Contact> = toRef(props, 'contact')
+  setup (props: any, context: any) {
+    const content: Ref<Contact> = ref(props.modelValue)
+    const validForm = ref(true)
+
+    watch(() => props.modelValue, (value) => content.value = value)
+    watch(content, () => context.emit('update:modelValue', content.value))
+
+    const submit = () => context.emit('submit')
+    const isValid = (valid: boolean) => validForm.value = valid
 
     return {
-      content
+      validForm,
+      isValid,
+      content,
+      submit
     }
   },
 
   computed: {
     buttonLabel () {
-      return this.contact.id ? 'Editar Contato' : 'Cadastrar Contato'
+      return this.modelValue.id ? 'Editar Contato' : 'Cadastrar Contato'
     }
   }
 })

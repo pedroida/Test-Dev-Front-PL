@@ -125,3 +125,12 @@ button {
 .min-height-90 {
   min-height: 90%;
 }
+
+button:disabled {
+  background-color: grey;
+  color: white !important;
+}
+
+.error-block {
+  height: 1em;
+}

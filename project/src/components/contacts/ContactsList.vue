@@ -2,7 +2,7 @@
   <div>
     <data-table :headers="headers" :items="contacts" has-actions>
       <template #action="{ item }">
-        <table-item-actions @edit="edit(item)" />
+        <table-item-actions @edit="edit(item)" @delete="deleteItem(item)"/>
       </template>
     </data-table>
   </div>
@@ -14,7 +14,9 @@ import { useStore } from 'vuex'
 import DataTable, { IDataTableHeader } from '@/components/shared/table/DataTable.vue'
 import TableItemActions from '@/components/shared/table/TableItemActions.vue'
 import { Contact } from '@/entities/Contact'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
+import { useToast } from 'vue-toastification'
+import ToastConfirm from '@/components/shared/ToastConfirm.vue'
 
 export default defineComponent({
   name: 'ContactsList',
@@ -38,7 +40,25 @@ export default defineComponent({
       router.replace({ name: 'contacts-edit', params: { id: item.id } })
     }
 
+    const deleteItem = (contact: Contact) => {
+      const toast = useToast()
+
+      toast({
+        component: ToastConfirm,
+        listeners: {
+          click: () => {
+            store.dispatch('contacts/requestDeleteContact', contact)
+              .then(() => {
+                toast.success('Contato removido com sucesso!')
+                store.dispatch('contacts/getContacts')
+              })
+          }
+        }
+      })
+    }
+
     return {
+      deleteItem,
       edit,
       contacts,
       headers

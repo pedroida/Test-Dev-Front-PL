@@ -10,14 +10,14 @@
       :placeholder="placeholder"
       required
     >
-    <div v-if="content && !isValid" class="pl-2 mt-2">
-      <small class="text-error">email inválido</small>
+    <div class="pl-2 mt-2 error-block">
+      <small v-if="content && !isValid" class="text-error">email inválido</small>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, toRef, watch } from 'vue'
+import { computed, defineComponent, ref, watch } from 'vue'
 
 export default defineComponent({
   name: 'InputEmailDefault',
@@ -36,7 +36,7 @@ export default defineComponent({
   },
 
   setup (props: any, context: any) {
-    const content = toRef(props, 'modelValue')
+    const content = ref(props.modelValue)
 
     const isValid = computed(() => {
       const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -44,9 +44,9 @@ export default defineComponent({
       return regex.test(String(content.value))
     })
 
-    watch(content, () => {
-      context.emit('update:modelValue', content)
-    })
+    watch(() => props.modelValue, (value) => content.value = value)
+    watch(content, () => context.emit('update:modelValue', content))
+    watch(isValid, (value: boolean) => context.emit('isValid', value))
 
     return {
       content,

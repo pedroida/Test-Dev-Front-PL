@@ -6,16 +6,18 @@
       id="input-phone"
       name="input-phone"
       type="text"
-      maxlength="200"
       :placeholder="placeholder"
       required
       v-maska="['(##) #####-####', '(##) ####-####']"
     >
+    <div class="pl-2 mt-2 error-block">
+      <small v-if="content && !isValid" class="text-error">telefone inválido</small>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, toRef, watch } from 'vue'
+import { computed, defineComponent, ref, watch } from 'vue'
 
 export default defineComponent({
   name: 'InputPhoneDefault',
@@ -39,14 +41,17 @@ export default defineComponent({
   },
 
   setup (props: any, context: any) {
-    const content = toRef(props, 'modelValue')
+    const content = ref(props.modelValue)
 
-    watch(content, () => {
-      context.emit('update:modelValue', content)
-    })
+    const isValid = computed(() => [14, 15].includes(content.value.length))
+
+    watch(() => props.modelValue, (value) => content.value = value)
+    watch(content, () => context.emit('update:modelValue', content))
+    watch(isValid, (value: boolean) => context.emit('isValid', value))
 
     return {
-      content
+      content,
+      isValid
     }
   }
 })

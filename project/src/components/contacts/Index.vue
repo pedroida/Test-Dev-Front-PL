@@ -7,7 +7,7 @@
       <button-default
         label="Adicionar novo contato"
         color="bg-primary-lighten-1"
-        class=""
+        @click="createContact"
       />
     </div>
   </div>
@@ -19,11 +19,19 @@
 import { defineComponent } from 'vue'
 import ContactsList from '@/components/contacts/ContactsList.vue'
 import ButtonDefault from '@/components/shared/form/ButtonDefault.vue'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'ContactsIndex',
 
   components: { ContactsList, ButtonDefault },
+
+  setup () {
+    const router = useRouter()
+    return {
+      createContact: () => router.replace({ name: 'contacts-create' })
+    }
+  }
 })
 </script>
 

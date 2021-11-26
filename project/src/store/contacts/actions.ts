@@ -19,18 +19,22 @@ const actions: ActionTree<ContactState, RootState> = {
     await commit('SET_CONTACT', contact)
   },
 
+  async expiredSession ({ dispatch }, error: any) {
+    if (error?.response?.data?.hasOwnProperty('auth')) {
+      dispatch('authentication/logout', '', { root: true })
+      const toast = useToast()
+      toast.error('Sua sessão expirou!')
+    }
+  },
+
   async getContacts ({ dispatch, commit }) {
     dispatch('startLoading')
     await contactService.getContacts()
       .then((contacts: Contact[]) => {
         commit('SET_CONTACTS', contacts)
       })
-      .catch((error) => {
-        if (error?.response?.data?.hasOwnProperty('auth')) {
-          dispatch('authentication/logout', '', { root: true })
-          const toast = useToast()
-          toast.error('Sua sessão expirou!')
-        }
+      .catch((error: any) => {
+        dispatch('expiredSession', error)
       })
       .finally(() => dispatch('stopLoading'))
   },
@@ -41,12 +45,41 @@ const actions: ActionTree<ContactState, RootState> = {
       .then((contact: Contact) => {
         dispatch('setContact', contact)
       })
-      .catch((error) => {
-        if (error?.response?.data?.hasOwnProperty('auth')) {
-          dispatch('authentication/logout', '', { root: true })
-          const toast = useToast()
-          toast.error('Sua sessão expirou!')
-        }
+      .catch((error: any) => {
+        dispatch('expiredSession', error)
+      })
+      .finally(() => dispatch('stopLoading'))
+  },
+
+  async requestCreateContact ({ dispatch }, contact: Contact) {
+    dispatch('startLoading')
+    await contactService.requestCreateContact(contact)
+      .then((contact: Contact) => {
+        dispatch('setContact', contact)
+      })
+      .catch((error: any) => {
+        dispatch('expiredSession', error)
+      })
+      .finally(() => dispatch('stopLoading'))
+  },
+
+  async requestUpdateContact ({ dispatch }, contact: Contact) {
+    dispatch('startLoading')
+    await contactService.requestUpdateContact(contact)
+      .then((contact: Contact) => {
+        dispatch('setContact', contact)
+      })
+      .catch((error: any) => {
+        dispatch('expiredSession', error)
+      })
+      .finally(() => dispatch('stopLoading'))
+  },
+
+  async requestDeleteContact ({ dispatch }, contact: Contact) {
+    dispatch('startLoading')
+    await contactService.requestDeleteContact(contact)
+      .catch((error: any) => {
+        dispatch('expiredSession', error)
       })
       .finally(() => dispatch('stopLoading'))
   }

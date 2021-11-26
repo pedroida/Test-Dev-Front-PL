@@ -1,5 +1,7 @@
 <template>
-  <button class="button" :class="[color, textColor, { 'btn-block': block }]">{{ label }}</button>
+  <button :disabled="disabled" class="button" :class="[color, textColor, { 'btn-block': block }]">
+    {{ label }}
+  </button>
 </template>
 
 <script lang="ts">
@@ -9,6 +11,12 @@ export default defineComponent({
   name: 'ButtonDefault',
 
   props: {
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: () => false
+    },
+
     block: {
       type: Boolean,
       required: false,

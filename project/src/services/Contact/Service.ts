@@ -9,7 +9,19 @@ const routes = {
     return '/clientes'
   },
 
+  get createClient () {
+    return '/clientes'
+  },
+
   getClient (id: number) {
+    return `/clientes/${id}`
+  },
+
+  updateClient (id: number) {
+    return `/clientes/${id}`
+  },
+
+  deleteClient (id: number) {
     return `/clientes/${id}`
   }
 }
@@ -29,6 +41,29 @@ class Service {
     const { data } = await client.get(routes.getClient(id))
 
     return contactDM.requestToEntity(data)
+  }
+
+  async requestCreateContact (contact: Contact): Promise<Contact> {
+    const client = Shared.clientFactory()
+    const payload = contactDM.entityToRequest(contact)
+
+    const { data } = await client.post(routes.createClient, payload)
+
+    return contactDM.requestToEntity(data)
+  }
+
+  async requestUpdateContact (contact: Contact): Promise<Contact> {
+    const client = Shared.clientFactory()
+    const payload = contactDM.entityToRequest(contact)
+
+    const { data } = await client.put(routes.updateClient(contact.id as number), payload)
+
+    return contactDM.requestToEntity(data)
+  }
+
+  async requestDeleteContact (contact: Contact): Promise<void> {
+    const client = Shared.clientFactory()
+    await client.delete(routes.deleteClient(contact.id as number))
   }
 }
 

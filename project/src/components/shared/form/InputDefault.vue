@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, toRef, watch } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 
 export default defineComponent({
   name: 'InputDefault',
@@ -36,11 +36,13 @@ export default defineComponent({
   },
 
   setup (props: any, context: any) {
-    const content = toRef(props, 'modelValue')
+    const content = ref(props.modelValue)
 
     watch(content, () => {
       context.emit('update:modelValue', content)
     })
+
+    watch(() => props.modelValue, (value) => content.value = value)
 
     return {
       content
