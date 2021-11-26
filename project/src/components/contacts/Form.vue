@@ -11,7 +11,7 @@
       <input-phone-default v-model="content.mobile" label="Celular" @isValid="isValid" />
     </div>
 
-    <div class="col-12 mt-5">
+    <div class="col-12 mt-3">
       <button-default :disabled="!validForm" :label="buttonLabel" block @click="submit" />
     </div>
   </div>

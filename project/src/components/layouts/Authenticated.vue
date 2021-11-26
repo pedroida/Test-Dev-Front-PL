@@ -1,14 +1,16 @@
 <template>
   <div class="authenticated-container">
     <div class="authenticated-header px-3 px-md-5">
-      <div v-show="!isIndex" class="d-flex align-items-center pointer" @click="backToList">
-        <img src="@/assets/images/icons/arrow-left.svg" alt="back icon" class="mr-2">
-        <span>Voltar</span>
+      <div>
+        <div class="align-items-center pointer" :class="!isIndex ? 'd-flex' : 'd-none'" @click="backToList">
+          <img src="@/assets/images/icons/arrow-left.svg" alt="back icon" class="mr-2">
+          <span>Voltar</span>
+        </div>
       </div>
 
       <span @click="logout" class="align-self-flex-end logout pointer">Sair</span>
     </div>
-    <div class="authenticated-content pt-4 px-5 pb-4 d-flex justify-content-center" :class="contentClass">
+    <div class="authenticated-content px-md-5 px-3 pb-4 d-flex justify-content-center" :class="contentClass">
       <div class="authenticated-content-card p-3 p-md-4 w-100" :class="fullWidth ? 'w-md-100' : 'w-md-60'">
         <slot/>
       </div>
@@ -70,6 +72,12 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+@media screen and (max-width: 768px){
+  .forms-content {
+    height: auto;
+    padding-top: 17em !important;
+  }
+}
 .authenticated-container {
   height: 100%;
   width: 100%;
@@ -90,7 +98,8 @@ export default defineComponent({
   }
 
   .authenticated-content {
-    padding-top: 7em !important;
+    overflow: auto;
+    padding-top: 7em;
 
     .authenticated-content-card {
       border-radius: 8px;

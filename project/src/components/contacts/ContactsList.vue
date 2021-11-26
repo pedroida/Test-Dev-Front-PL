@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="table-container">
     <data-table :headers="headers" :items="contacts" has-actions>
       <template #action="{ item }">
         <table-item-actions @edit="edit(item)" @delete="deleteItem(item)"/>

@@ -1,5 +1,5 @@
 <template>
-  <authenticated-container :full-width="isIndex" :content-class="isIndex ? 'h-100' : ''">
+  <authenticated-container :full-width="isIndex" :content-class="isIndex ? 'h-100' : 'forms-content'">
 
     <contacts-index v-if="isIndex" />
 

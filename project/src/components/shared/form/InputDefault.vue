@@ -8,6 +8,7 @@
       :placeholder="placeholder"
       required
     />
+    <div class="pl-2 mt-2 error-block" />
   </div>
 </template>
 
